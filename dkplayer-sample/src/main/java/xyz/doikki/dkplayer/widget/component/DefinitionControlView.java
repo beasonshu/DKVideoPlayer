@@ -31,9 +31,9 @@ import java.util.Map;
 
 public class DefinitionControlView extends VodControlView {
 
-    private TextView mDefinition;
+    private final TextView mDefinition;
 
-    private PopupWindow mPopupWindow;
+    private final PopupWindow mPopupWindow;
     private List<String> mRateStr;
     private LinearLayout mPopLayout;
 

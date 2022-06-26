@@ -28,5 +28,3 @@ dependencies {
 ext {
     PUBLISH_ARTIFACT_ID = 'player-exo'
 }
-
-apply from: '../../publish.gradle'

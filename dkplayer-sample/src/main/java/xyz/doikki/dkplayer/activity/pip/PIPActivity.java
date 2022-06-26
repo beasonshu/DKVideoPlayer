@@ -34,23 +34,27 @@ public class PIPActivity extends BaseActivity {
         }
         FrameLayout playerContainer = findViewById(R.id.player_container);
         mPIPManager = PIPManager.getInstance();
-        VideoView videoView = getVideoViewManager().get(Tag.PIP);
         StandardVideoController controller = new StandardVideoController(this);
         controller.addDefaultControlComponent(getString(R.string.str_pip), false);
+        VideoView videoView = getVideoViewManager().get(Tag.PIP);
         videoView.setVideoController(controller);
-        if (mPIPManager.isStartFloatWindow()) {
-            mPIPManager.stopFloatWindow();
-            controller.setPlayerState(videoView.getCurrentPlayerState());
-            controller.setPlayState(videoView.getCurrentPlayState());
-        } else {
-            mPIPManager.setActClass(PIPActivity.class);
-            ImageView thumb = controller.findViewById(R.id.thumb);
-            Glide.with(this)
-                    .load("http://sh.people.com.cn/NMediaFile/2016/0112/LOCAL201601121344000138197365721.jpg")
-                    .placeholder(android.R.color.darker_gray)
-                    .into(thumb);
-            videoView.setUrl(DataUtil.SAMPLE_URL);
-        }
+        mPIPManager.setVideoViewRestore(() -> {
+            if (mPIPManager.isStartFloatWindow()) {
+                mPIPManager.stopFloatWindow();
+                controller.setPlayerState(videoView.getCurrentPlayerState());
+                controller.setPlayState(videoView.getCurrentPlayState());
+                videoView.setVideoController(controller);
+                playerContainer.addView(videoView);
+            }
+        });
+
+        mPIPManager.setActClass(PIPActivity.class);
+        ImageView thumb = controller.findViewById(R.id.thumb);
+        Glide.with(this)
+                .load("http://sh.people.com.cn/NMediaFile/2016/0112/LOCAL201601121344000138197365721.jpg")
+                .placeholder(android.R.color.darker_gray)
+                .into(thumb);
+        videoView.setUrl(DataUtil.SAMPLE_URL);
         playerContainer.addView(videoView);
     }
 
@@ -95,7 +99,7 @@ public class PIPActivity extends BaseActivity {
                 .onGranted(data -> {
                     mPIPManager.startFloatWindow();
                     mPIPManager.resume();
-                    finish();
+//                    finish();
                 })
                 .onDenied(data -> {
 

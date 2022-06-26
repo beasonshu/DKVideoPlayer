@@ -20,5 +20,3 @@ dependencies {
 ext {
     PUBLISH_ARTIFACT_ID = 'dkplayer-ui'
 }
-
-apply from: '../publish.gradle'

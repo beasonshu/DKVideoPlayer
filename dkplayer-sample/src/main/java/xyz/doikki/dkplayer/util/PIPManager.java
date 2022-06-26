@@ -15,6 +15,10 @@ import xyz.doikki.videoplayer.player.VideoViewManager;
 
 public class PIPManager {
 
+    public interface VideoViewRestore{
+        void restore();
+    }
+
     private static PIPManager instance;
     private final VideoView mVideoView;
     private final FloatView mFloatView;
@@ -22,6 +26,16 @@ public class PIPManager {
     private boolean mIsShowing;
     private int mPlayingPosition = -1;
     private Class mActClass;
+
+    public VideoViewRestore getVideoViewRestore() {
+        return mVideoViewRestore;
+    }
+
+    public void setVideoViewRestore(VideoViewRestore mVideoViewRestore) {
+        this.mVideoViewRestore = mVideoViewRestore;
+    }
+
+    private VideoViewRestore mVideoViewRestore;
 
 
     private PIPManager() {
@@ -112,5 +126,7 @@ public class PIPManager {
     public Class getActClass() {
         return mActClass;
     }
+
+
 
 }

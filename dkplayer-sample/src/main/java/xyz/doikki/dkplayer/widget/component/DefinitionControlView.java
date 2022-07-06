@@ -35,7 +35,7 @@ public class DefinitionControlView extends VodControlView {
 
     private final PopupWindow mPopupWindow;
     private List<String> mRateStr;
-    private LinearLayout mPopLayout;
+    private final LinearLayout mPopLayout;
 
     private int mCurIndex;
 
@@ -125,7 +125,7 @@ public class DefinitionControlView extends VodControlView {
         }
     }
 
-    private OnClickListener rateOnClickListener = new OnClickListener() {
+    private final OnClickListener rateOnClickListener = new OnClickListener() {
 
         @Override
         public void onClick(View v) {

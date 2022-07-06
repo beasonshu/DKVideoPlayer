@@ -19,13 +19,11 @@ public class PIPManager {
         void restore();
     }
 
-    private static PIPManager instance;
     private final VideoView mVideoView;
     private final FloatView mFloatView;
     private final FloatController mFloatController;
     private boolean mIsShowing;
     private int mPlayingPosition = -1;
-    private Class mActClass;
 
     public VideoViewRestore getVideoViewRestore() {
         return mVideoViewRestore;
@@ -45,15 +43,12 @@ public class PIPManager {
         mFloatView = new FloatView(MyApplication.getInstance(), 0, 0);
     }
 
+    private static final class InstanceHolder {
+        static final PIPManager instance = new PIPManager();
+    }
+
     public static PIPManager getInstance() {
-        if (instance == null) {
-            synchronized (PIPManager.class) {
-                if (instance == null) {
-                    instance = new PIPManager();
-                }
-            }
-        }
-        return instance;
+        return InstanceHolder.instance;
     }
 
     public void startFloatWindow() {
@@ -98,7 +93,6 @@ public class PIPManager {
         mVideoView.release();
         mVideoView.setVideoController(null);
         mPlayingPosition = -1;
-        mActClass = null;
     }
 
     public boolean onBackPress() {
@@ -118,15 +112,6 @@ public class PIPManager {
             mFloatView.setVisibility(View.VISIBLE);
         }
     }
-
-    public void setActClass(Class cls) {
-        this.mActClass = cls;
-    }
-
-    public Class getActClass() {
-        return mActClass;
-    }
-
 
 
 }

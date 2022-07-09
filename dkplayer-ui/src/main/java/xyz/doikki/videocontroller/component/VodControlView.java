@@ -41,7 +41,6 @@ public class VodControlView extends FrameLayout implements IControlComponent, Vi
     private final ImageView mFullScreen;
     private final LinearLayout mBottomContainer;
     private final SeekBar mVideoProgress;
-    private final ProgressBar mBottomProgress;
     private final ImageView mPlayButton;
 
     private boolean mIsDragging;
@@ -73,7 +72,6 @@ public class VodControlView extends FrameLayout implements IControlComponent, Vi
         mCurrTime = findViewById(R.id.curr_time);
         mPlayButton = findViewById(R.id.iv_play);
         mPlayButton.setOnClickListener(this);
-        mBottomProgress = findViewById(R.id.bottom_progress);
 
         //5.1以下系统SeekBar高度需要设置成WRAP_CONTENT
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
@@ -109,20 +107,13 @@ public class VodControlView extends FrameLayout implements IControlComponent, Vi
             if (anim != null) {
                 mBottomContainer.startAnimation(anim);
             }
-            if (mIsShowBottomProgress) {
-                mBottomProgress.setVisibility(GONE);
-            }
+
         } else {
             mBottomContainer.setVisibility(GONE);
             if (anim != null) {
                 mBottomContainer.startAnimation(anim);
             }
-            if (mIsShowBottomProgress) {
-                mBottomProgress.setVisibility(VISIBLE);
-                AlphaAnimation animation = new AlphaAnimation(0f, 1f);
-                animation.setDuration(300);
-                mBottomProgress.startAnimation(animation);
-            }
+
         }
     }
 
@@ -132,8 +123,6 @@ public class VodControlView extends FrameLayout implements IControlComponent, Vi
             case VideoView.STATE_IDLE:
             case VideoView.STATE_PLAYBACK_COMPLETED:
                 setVisibility(GONE);
-                mBottomProgress.setProgress(0);
-                mBottomProgress.setSecondaryProgress(0);
                 mVideoProgress.setProgress(0);
                 mVideoProgress.setSecondaryProgress(0);
                 break;
@@ -147,11 +136,9 @@ public class VodControlView extends FrameLayout implements IControlComponent, Vi
                 mPlayButton.setSelected(true);
                 if (mIsShowBottomProgress) {
                     if (mControlWrapper.isShowing()) {
-                        mBottomProgress.setVisibility(GONE);
                         mBottomContainer.setVisibility(VISIBLE);
                     } else {
                         mBottomContainer.setVisibility(GONE);
-                        mBottomProgress.setVisibility(VISIBLE);
                     }
                 } else {
                     mBottomContainer.setVisibility(GONE);
@@ -193,13 +180,10 @@ public class VodControlView extends FrameLayout implements IControlComponent, Vi
             int cutoutHeight = mControlWrapper.getCutoutHeight();
             if (orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
                 mBottomContainer.setPadding(0, 0, 0, 0);
-                mBottomProgress.setPadding(0, 0, 0, 0);
             } else if (orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
                 mBottomContainer.setPadding(cutoutHeight, 0, 0, 0);
-                mBottomProgress.setPadding(cutoutHeight, 0, 0, 0);
             } else if (orientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE) {
                 mBottomContainer.setPadding(0, 0, cutoutHeight, 0);
-                mBottomProgress.setPadding(0, 0, cutoutHeight, 0);
             }
         }
     }
@@ -215,17 +199,14 @@ public class VodControlView extends FrameLayout implements IControlComponent, Vi
                 mVideoProgress.setEnabled(true);
                 int pos = (int) (position * 1.0 / duration * mVideoProgress.getMax());
                 mVideoProgress.setProgress(pos);
-                mBottomProgress.setProgress(pos);
             } else {
                 mVideoProgress.setEnabled(false);
             }
             int percent = mControlWrapper.getBufferedPercentage();
             if (percent >= 95) { //解决缓冲进度不能100%问题
                 mVideoProgress.setSecondaryProgress(mVideoProgress.getMax());
-                mBottomProgress.setSecondaryProgress(mBottomProgress.getMax());
             } else {
                 mVideoProgress.setSecondaryProgress(percent * 10);
-                mBottomProgress.setSecondaryProgress(percent * 10);
             }
         }
 
